@@ -10,6 +10,24 @@ import yfinance as yf
 # ============================================================
 TICKERS = ["AAPL", "TSLA", "INFY"]
 
+# Price alerts: {"TICKER": {"above": price, "below": price}}
+# Use "above" for price > threshold, "below" for price < threshold
+ALERTS = {
+    "AAPL": {"below": 400},
+    "TSLA": {"above": 350},
+}
+
+
+def check_alerts(ticker: str, price: float) -> None:
+    """Check if price crosses any configured alert threshold for the ticker."""
+    if ticker not in ALERTS:
+        return
+    for direction, threshold in ALERTS[ticker].items():
+        if direction == "above" and price > threshold:
+            print(f"  ALERT: {ticker} is above ${threshold}!")
+        elif direction == "below" and price < threshold:
+            print(f"  ALERT: {ticker} is below ${threshold}!")
+
 
 def fetch_stock_data(ticker: str) -> dict | None:
     """
@@ -55,6 +73,7 @@ def main():
         if data:
             change_str = format_change(data["change_percent"])
             print(f"{data['ticker']}:  ${data['price']:.2f}  {change_str}")
+            check_alerts(ticker, data["price"])
 
 
 if __name__ == "__main__":

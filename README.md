@@ -8,6 +8,7 @@ A simple Python script that fetches real-time stock prices and daily percentage 
 - Clean, color-coded terminal output
 - Easy to customize ticker list
 - Uses `yfinance` (no API key required)
+- **Configurable price alerts** — get notified when a stock crosses above/below a threshold
 
 ## Installation
 
@@ -37,6 +38,30 @@ TICKERS = ["AAPL", "TSLA", "INFY", "GOOGL", "MSFT"]
 ```
 
 Add any valid Yahoo Finance ticker symbols (stocks, ETFs, crypto like `BTC-USD`, etc.).
+
+## Price Alerts
+
+Configure alerts per ticker using the `ALERTS` dictionary at the top of `stock_watchlist.py`. Each ticker can have `"above"` and/or `"below"` thresholds:
+
+```python
+ALERTS = {
+    "AAPL": {"below": 400},      # Alert if AAPL drops below $400
+    "TSLA": {"above": 350},      # Alert if TSLA rises above $350
+    "INFY": {"above": 20, "below": 10},  # Alert both ways
+}
+```
+
+When a threshold is crossed, the output includes a clear warning:
+
+```
+AAPL:  $333.74  (+0.14%)
+  ALERT: AAPL is below $400!
+TSLA:  $380.84  (-2.61%)
+  ALERT: TSLA is above $350!
+INFY:  $11.49  (-0.35%)
+```
+
+Tickers not listed in `ALERTS` are silently skipped (no alerts checked).
 
 ## How It Works
 
